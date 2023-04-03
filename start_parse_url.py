@@ -1,5 +1,6 @@
 import re
 import sys
+from http.client import HTTPException
 from urllib.error import URLError
 from urllib.request import urlopen
 from structure import HtmlTag
@@ -9,7 +10,6 @@ from parser import parse_html_with_rules
 from rules import Settings, get_rules_for_url
 
 
-# TODO изменить название класса
 class HtmlPage:
     def __init__(self, url: str):
         self.url = url
@@ -21,11 +21,11 @@ class HtmlPage:
     @property
     def html(self) -> str:
         try:
-            with urlopen(self.url, timeout=5) as response:
+            with urlopen(self.url, timeout=8) as response:
                 charset = response.headers.get_content_charset()
                 html: str = response.read().decode(charset)
                 return html
-        except URLError:
+        except (URLError, HTTPException, TimeoutError):
             sys.exit(f'\rНе удалось открыть указанную ссылку {self.url}')
 
     def get_content(self) -> str:
@@ -34,7 +34,7 @@ class HtmlPage:
         tags_with_content: list[HtmlTag] = parse_html_with_rules(
             self.html[article_start_index:], self.rules.text_tag)
 
-        content: str = format_html(tags_with_content, self.rules.formatter_rules)
+        content: str = format_html(tags_with_content, self.rules)
         return content
 
 

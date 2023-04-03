@@ -75,8 +75,8 @@ class HTMLParserWithRules(HTMLParser):
     def handle_endtag(self, tag):
         if self._pattern.match(tag):
             assert self.current_html_tag, 'Встретился закрывающий тэг, но self.current_html_tag пустой!'
-
-            self.content_tags.append(self.current_html_tag)
+            if not self.current_html_tag.parent:
+                self.content_tags.append(self.current_html_tag)
             self.current_html_tag = self.current_html_tag.parent
 
         last_open_tag = self._name_tags.pop()
@@ -89,7 +89,8 @@ class HTMLParserWithRules(HTMLParser):
     def handle_data(self, data):
         if self.current_html_tag:
             if self._pattern.match(self.current_html_tag.name):
-                self.current_html_tag.content.append(data)
+                if data not in (' ', '\n'):
+                    self.current_html_tag.content.append(data)
 
 
 def parse_html_with_rules(html: str, rules) -> list[HtmlTag]:
