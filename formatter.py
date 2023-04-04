@@ -98,7 +98,7 @@ class FormatterHtmlContent:
 def format_html(tags: Iterable[HtmlTag], settings: Settings) -> str:
     result_content: str = FormatterHtmlContent(
         tags,
-        settings.formatter_rules,
+        settings.formatting_rules,
         settings.max_line_length,
     ).get_text()
     return result_content

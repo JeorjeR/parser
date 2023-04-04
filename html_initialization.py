@@ -29,31 +29,40 @@ class HtmlPage:
             sys.exit(f'\rНе удалось открыть указанную ссылку {self.url}\n{ex}')
 
     def get_content(self) -> str:
-        article_start_index: int = get_article_start_index(self.html[:])
+        article_start_index: int = self.get_article_start_index()
 
         tags_with_content: list[HtmlTag] = parse_html_with_rules(
-            self.html[article_start_index:], self.rules.text_tag)
+            self.html[article_start_index:], self.rules.text_tags)
 
         content: str = format_html(tags_with_content, self.rules)
         return content
 
+    def get_article_start_index(self) -> int:
+        content_pattern = self.rules.cutter_tag
+        article_start_index = re.finditer(fr'{content_pattern}', self.html)
+        current_tag_start_index = None
+        for tag in article_start_index:
+            t = tag.group()
+            try:
+                if article := tag.group('article'):
+                    article = article.lower()
+                if content := tag.group('content'):
+                    content = content.lower()
 
-def get_article_start_index(html: str) -> int:
-    article_start_index = re.finditer(
-        r'(<(div)'
-        r'[^<]*(class|id)="[^"]*(article|content)[^>]*>)'
-        r'|(<(article|section)[^>]*>)',
-        html)
-    current_tag_start_index = 0
-    for tag in article_start_index:
-        h = tag.group()
-        if p := tag.group(5):
-            return tag.start()
-        elif (g := tag.group(4)) == 'article':
-            return tag.start()
-        elif tag.group(4) == 'content':
-            current_tag_start_index = tag.start()
-    return current_tag_start_index
+                if tag.group('start'):
+                    return tag.start()
+                elif article == 'article':
+                    return tag.start()
+                elif content == 'content':
+                    if not current_tag_start_index:
+                        current_tag_start_index = tag.start()
+            except IndexError:
+                return tag.start()
+        if not current_tag_start_index:
+            sys.exit('Не получилось найти контент на данной странице, '
+                     'возможно неверно задан параметр CUTTER_TAG')
+
+        return current_tag_start_index
 
 
 def start_parse(url: str) -> str:

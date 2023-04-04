@@ -2,7 +2,7 @@ import itertools
 import sys
 from threading import Event, Thread
 
-from start_parse_url import start_parse
+from html_initialization import start_parse
 
 # url = sys.argv[1]
 
@@ -13,7 +13,7 @@ from start_parse_url import start_parse
 # url = 'https://www.gazeta.ru/comments/column/kolesnikov/14779778.shtml'
 # url = 'https://www.rbc.ru/business/31/03/2023/6425abb79a79477297e32c03?from=from_main_2'
 # url = 'https://lenta.ru/news/2023/04/03/nhl_russia/'
-url = 'https://www.gazeta.ru/culture/news/2023/04/04/20134171.shtml'
+url = 'https://www.gazeta.ru/lifestyle/photo/rio-de-janeiro-carnival-parade-2022.shtml'
 
 
 
