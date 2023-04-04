@@ -44,15 +44,17 @@ class FormatterHtmlContent:
         line_buffer = deque()
         for match in re.finditer(r'\n|[^\s]+', text):
             word = match.group()
+            if word == '\n':
+                self.current_line_length = 0
+                continue
+
             if re.match(url_pattern, word):
                 word = f'[{word}]'
+
             max_line_length = self.max_line_length - len(line_buffer)
             current_word_len = len(word)
             self.current_line_length += current_word_len + 1
 
-            if word == '\n':
-                self.current_line_length = 0
-                continue
             if self.current_line_length > max_line_length:
                 yield ' '.join(line_buffer)
                 line_buffer.clear()

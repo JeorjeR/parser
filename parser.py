@@ -18,16 +18,7 @@ class StopParsing(Exception):
         return f'{self.__class__.__name__}, parsing is ending'
 
 
-# TODO не реализовал удаление всех html тэгов внутри нужного мне тэга
-#   то есть надо очистить текст и разобраться как парсер выдают этот текст внутри тэга если он разделен другим тэгом
-
-# TODO првоерку сделать а то если приходит невалидная html страницы и контент находится раньше чем тэг
-#   в таком случае deque пустой и программа падает
-
-
-STARTEND_TAGS = {'img', 'link', 'meta', 'input'}
-
-# TODO подумать как передавать сюда правила, либо классом либо как несколько аргументов
+STARTEND_TAGS = {'img', 'link', 'meta', 'input', 'br'}
 
 
 class HTMLParserWithRules(HTMLParser):
@@ -73,23 +64,26 @@ class HTMLParserWithRules(HTMLParser):
             self._name_tags.append(tag)
 
     def handle_endtag(self, tag):
-        if self._pattern.match(tag):
-            assert self.current_html_tag, 'Встретился закрывающий тэг, но self.current_html_tag пустой!'
-            if not self.current_html_tag.parent:
-                self.content_tags.append(self.current_html_tag)
-            self.current_html_tag = self.current_html_tag.parent
+        if tag in STARTEND_TAGS:
+            self.handle_startendtag(tag, [])
+        else:
+            if self._pattern.match(tag):
+                assert self.current_html_tag, 'Встретился закрывающий тэг, но self.current_html_tag пустой!'
+                if not self.current_html_tag.parent:
+                    self.content_tags.append(self.current_html_tag)
+                self.current_html_tag = self.current_html_tag.parent
 
-        last_open_tag = self._name_tags.pop()
+            last_open_tag = self._name_tags.pop()
 
-        assert last_open_tag == tag, f'last_open_tag:{last_open_tag} != tag:{tag}'
+            assert last_open_tag == tag, f'last_open_tag:{last_open_tag} != tag:{tag}'
 
-        if not self._name_tags:
-            raise StopParsing(data=self.content_tags)
+            if not self._name_tags:
+                raise StopParsing(data=self.content_tags)
 
     def handle_data(self, data):
         if self.current_html_tag:
             if self._pattern.match(self.current_html_tag.name):
-                if data not in (' ', '\n'):
+                if not re.match(r'^[\s\n]*$', data):
                     self.current_html_tag.content.append(data)
 
 

@@ -25,8 +25,8 @@ class HtmlPage:
                 charset = response.headers.get_content_charset()
                 html: str = response.read().decode(charset)
                 return html
-        except (URLError, HTTPException, TimeoutError):
-            sys.exit(f'\rНе удалось открыть указанную ссылку {self.url}')
+        except (URLError, HTTPException, TimeoutError) as ex:
+            sys.exit(f'\rНе удалось открыть указанную ссылку {self.url}\n{ex}')
 
     def get_content(self) -> str:
         article_start_index: int = get_article_start_index(self.html[:])
@@ -39,10 +39,21 @@ class HtmlPage:
 
 
 def get_article_start_index(html: str) -> int:
-    article_start_index: int = re.search(
-        r'<article[^>]*>', html).start()
-        # r'<article[^>]*>|<div[^>]+class="[^>"]+([Aa]rticle)[^>]+>', html).start()
-    return article_start_index
+    article_start_index = re.finditer(
+        r'(<(div)'
+        r'[^<]*(class|id)="[^"]*(article|content)[^>]*>)'
+        r'|(<(article|section)[^>]*>)',
+        html)
+    current_tag_start_index = 0
+    for tag in article_start_index:
+        h = tag.group()
+        if p := tag.group(5):
+            return tag.start()
+        elif (g := tag.group(4)) == 'article':
+            return tag.start()
+        elif tag.group(4) == 'content':
+            current_tag_start_index = tag.start()
+    return current_tag_start_index
 
 
 def start_parse(url: str) -> str:

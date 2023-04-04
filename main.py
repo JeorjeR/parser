@@ -7,12 +7,15 @@ from start_parse_url import start_parse
 # url = sys.argv[1]
 
 
-# url = 'https://lenta.ru/news/2023/03/30/nizhepoyasa/'
+# url = 'https://lenta.ru/news/2023/04/03/nhl_russia/'
 # url = 'https://habr.com/ru/post/721788/'
 # url = 'https://www.gazeta.ru/politics/news/2023/03/30/20098033.shtml'
 # url = 'https://www.gazeta.ru/comments/column/kolesnikov/14779778.shtml'
 # url = 'https://www.rbc.ru/business/31/03/2023/6425abb79a79477297e32c03?from=from_main_2'
-url = 'https://habr.com/ru/company/rshb/blog/726690/'
+# url = 'https://lenta.ru/news/2023/04/03/nhl_russia/'
+url = 'https://www.gazeta.ru/culture/news/2023/04/04/20134171.shtml'
+
+
 
 
 # TODO !!!! обработать ошибку если не нашли начало блока article иначе вылетает nontype hasnt stert()
@@ -21,7 +24,6 @@ url = 'https://habr.com/ru/company/rshb/blog/726690/'
 # TODO в целом все сделано, но необходимо решить следующе вопросы
 #   1. Как определять с какого тэга начинать читать контент, то есть в файле настроек дать возможность ввести название
 #       тега и его класс допустим, потом парсер как то должен найти этот тег
-
 
 def spin(msg: str, done: Event) -> None:
     for char in itertools.cycle('.'*idx for idx in range(15)):
@@ -57,6 +59,8 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print(ERROR_MESSAGE, file=sys.stderr)
+    except AssertionError as ex:
+        print(ERROR_MESSAGE, ex, sep='\nСкорее всего html страница некорректно обработалась парсером\n', file=sys.stderr)
     except:
         print(ERROR_MESSAGE, file=sys.stderr)
         raise

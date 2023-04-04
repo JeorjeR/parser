@@ -31,6 +31,7 @@ STANDARD_RULES = dict(
         'a': {
             'template': '{}',
         },
+
     }
 )
 
