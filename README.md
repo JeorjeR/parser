@@ -6,6 +6,37 @@
 ## Пояснение к настройкам
 Настройки задаются в файле `src\settings.py`. Допустимые параметры можно посмотреть в<br>
 `src\rules.py` в переменной `STANDARD_RULES`
+```
+# Пример файла settings.py
+URL_RULES = {
+    'ссылка':
+        {
+            'TEXT_TAGS': ('h', 'p'),
+            'FORMATTING_RULES':
+                {
+                    'p': {
+                        'template': '\n[ПАРАГРАФ]{}[ПАРАГРАФ]\n',
+                    },
+                    'h': {
+                        'template': '\n[ЗАГОЛОВОК]{}[ЗАГОЛОВОК]\n',
+                    },
+                    'b': {
+                        'template': '[ЖИРНЫЙ ШРИФТ]{}[ЖИРНЫЙ ШРИФТ]',
+                    },
+                    'li': {
+                        'template': '\n{}',
+                    },
+                    'a': {
+                        'template': '[ГИПЕРССЫЛКА]{}[ГИПЕРССЫЛКА]',
+                    },
+                },
+            'MAX_LINE_LENGTH': 20,
+        }
+}
+CURRENT_DIRECTORY = r'C:\Egor\projects\pythonProject\tensor\result'
+
+MAX_LINE_LENGTH = 80
+```
 
 ## Алгоритм решения задачи
 >1. С помощью регулярных выражений программа находит блок html страницы,<br>
