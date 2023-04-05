@@ -81,11 +81,11 @@ SETTINGS = create_settings(STANDARD_RULES, USER_SETTINGS)
 
 @dataclass(frozen=True, slots=True)
 class Settings:
-    cutter_tag: frozenset = SETTINGS['CUTTER_TAG']
-    text_tags: frozenset = SETTINGS['TEXT_TAGS']
-    formatting_rules: dict = field(default_factory=lambda: SETTINGS['FORMATTING_RULES'])
-    current_directory: str = SETTINGS['CURRENT_DIRECTORY']
-    max_line_length: int = SETTINGS['MAX_LINE_LENGTH']
+    cutter_tag: frozenset = SETTINGS['CUTTER_TAG']  # Тэг, который содержит статью
+    text_tags: frozenset = SETTINGS['TEXT_TAGS']  # Тэги, из которых буде тбраться контент
+    formatting_rules: dict = field(default_factory=lambda: SETTINGS['FORMATTING_RULES'])  # Шаблоны для тэгов
+    current_directory: str = SETTINGS['CURRENT_DIRECTORY']  # Директория, в которую записываются результаты
+    max_line_length: int = SETTINGS['MAX_LINE_LENGTH']  # Максимальная длина строки
 
 
 def get_rules():

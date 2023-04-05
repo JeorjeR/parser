@@ -36,7 +36,7 @@ class HtmlPage:
         Возвращает отформатированную статью со страницы
         """
         article_start_index: int = self.get_article_start_index()
-
+        h = self.html[article_start_index:]
         tags_with_content: list[HtmlTag] = parse_html_with_rules(
             self.html[article_start_index:], self.rules.text_tags)
 

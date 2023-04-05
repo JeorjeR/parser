@@ -3,8 +3,10 @@ import sys
 from threading import Event, Thread
 
 from html_initialization import start_parse
-
-url = sys.argv[1]
+try:
+    url = sys.argv[1]
+except IndexError:
+    sys.exit('Ссылка не была передана в программу')
 
 
 def spin(msg: str, done: Event) -> None:
@@ -40,8 +42,6 @@ ERROR_MESSAGE = '\rПрограмма преждевременно заверш�
 
 if __name__ == '__main__':
     try:
-        if not url:
-            sys.exit('Ссылка не была передана в программу')
         main(url)
     except KeyboardInterrupt:
         print(ERROR_MESSAGE, file=sys.stderr)
