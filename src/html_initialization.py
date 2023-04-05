@@ -25,7 +25,7 @@ class HtmlPage:
                 charset = response.headers.get_content_charset()
                 html: str = response.read().decode(charset)
                 return html
-        except (URLError, HTTPException, TimeoutError) as ex:
+        except (URLError, HTTPException, TimeoutError, ValueError) as ex:
             sys.exit(f'\rНе удалось открыть указанную ссылку {self.url}\n{ex}')
 
     def get_content(self) -> str:
