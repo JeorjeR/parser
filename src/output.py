@@ -5,6 +5,9 @@ from urllib.parse import ParseResult, urlparse
 
 
 class OutputContent:
+    """
+    Класс для вывода статьи в файл
+    """
     def __init__(self, url, content, current_directory=None):
         self.url = url
         self.content = content

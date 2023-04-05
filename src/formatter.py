@@ -17,6 +17,9 @@ url_pattern = re.compile(
 
 
 class FormatterHtmlContent:
+    """
+    Класс для форматирования текста
+    """
 
     def __init__(self, html_tags: Iterable[HtmlTag], rules: Mapping, max_line_length: int):
         for tag_parameters in rules.values():
@@ -27,13 +30,19 @@ class FormatterHtmlContent:
         self.current_line_length: int = 0
         self.max_line_length = max_line_length
 
-    def _get_template(self, tag):
+    def _get_template(self, tag) -> str:
+        """
+        Возвращает шаблон из правил
+        """
         tag_rule = self.tags_with_rules.get(tag.name, None)
         if tag_rule:
             return tag_rule.get('template', '{}')
         return '{}'
 
     def _content_to_template(self, tag, tag_content) -> str:
+        """
+        Подставляет тэг в шаблон, возвращает строку
+        """
         try:
             tag_template: str = self._get_template(tag)
             return tag_template.format(tag_content)
@@ -41,6 +50,9 @@ class FormatterHtmlContent:
             sys.exit(f'Шаблон для тэга должен быть типа int: {tag_template}')
 
     def split_text_to_word_iter(self, text: str):
+        """
+        Разделяет текст на слова
+        """
         line_buffer = deque()
         for match in re.finditer(r'\n|[^\s]+', text):
             word = match.group()
@@ -65,7 +77,12 @@ class FormatterHtmlContent:
 
         yield ' '.join(line_buffer)
 
-    def level_two(self, tag):
+    def get_tag_content(self, tag):
+        """
+        Возвращает контент для тэга
+        :param tag:
+        :return:
+        """
         if tag.content:
             content_buffer = []
 
@@ -74,7 +91,7 @@ class FormatterHtmlContent:
 
             for element in tag.content:
                 if isinstance(element, HtmlTag):
-                    content_part = self.level_two(element)
+                    content_part = self.get_tag_content(element)
                 else:
                     content_part: str = '\n'.join(self.split_text_to_word_iter(element))
                 content_buffer.append(content_part)
@@ -87,12 +104,12 @@ class FormatterHtmlContent:
             return content
         return ''
 
-    def level_one(self):
+    def get_all_tags_content(self):
         for tag in self.html_tags:
-            yield self.level_two(tag)
+            yield self.get_tag_content(tag)
 
     def get_text(self):
-        return ''.join(self.level_one())
+        return ''.join(self.get_all_tags_content())
 
 
 def format_html(tags: Iterable[HtmlTag], settings: Settings) -> str:

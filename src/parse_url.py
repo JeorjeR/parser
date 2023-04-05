@@ -8,6 +8,7 @@ url = sys.argv[1]
 
 
 def spin(msg: str, done: Event) -> None:
+    """Функция отображает в консоли анимацию загрузки"""
     for char in itertools.cycle('.'*idx for idx in range(15)):
         status = f'\r{msg} {char}'
         print(status, end='', flush=True)
@@ -29,6 +30,7 @@ def supervisor(url_):
 
 
 def main(url_):
+    """Функция входа в программу"""
     file_name = supervisor(url_)
     print('\rФайл со статьей успешно создан по пути', f'{file_name}', sep=' ')
 

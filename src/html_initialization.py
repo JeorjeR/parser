@@ -11,6 +11,9 @@ from rules import Settings, get_rules_for_url
 
 
 class HtmlPage:
+    """
+    Класс html страницы, знает ссылку, html код, правила для парсинга страницы
+    """
     def __init__(self, url: str):
         self.url = url
 
@@ -29,6 +32,9 @@ class HtmlPage:
             sys.exit(f'\rНе удалось открыть указанную ссылку {self.url}\n{ex}')
 
     def get_content(self) -> str:
+        """
+        Возвращает отформатированную статью со страницы
+        """
         article_start_index: int = self.get_article_start_index()
 
         tags_with_content: list[HtmlTag] = parse_html_with_rules(
@@ -38,6 +44,9 @@ class HtmlPage:
         return content
 
     def get_article_start_index(self) -> int:
+        """
+        Вычисляет индекс тэга, внутри которого лежит статья
+        """
         content_pattern = self.rules.cutter_tag
         start_tag_iter = re.finditer(fr'{content_pattern}', self.html)
         content_start_index = None
