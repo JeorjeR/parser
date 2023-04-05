@@ -1,24 +1,22 @@
 import re
 from collections.abc import Iterable
 from html.parser import HTMLParser
-
 from structure import HtmlTag
-
 from collections import deque
+
+
+STARTEND_TAGS = {'img', 'link', 'meta', 'input', 'br'}
 
 
 class StopParsing(Exception):
     """
-    Класс исключения для остановки парсинга html стрыницы
+    Класс исключения для остановки парсинга html страницы
     """
     def __init__(self, *args, **kwargs):
         self.data = kwargs.pop('data', None)
 
     def __str__(self):
         return f'{self.__class__.__name__}, parsing is ending'
-
-
-STARTEND_TAGS = {'img', 'link', 'meta', 'input', 'br'}
 
 
 class HTMLParserWithRules(HTMLParser):

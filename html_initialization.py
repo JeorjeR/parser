@@ -39,10 +39,10 @@ class HtmlPage:
 
     def get_article_start_index(self) -> int:
         content_pattern = self.rules.cutter_tag
-        article_start_index = re.finditer(fr'{content_pattern}', self.html)
-        current_tag_start_index = None
-        for tag in article_start_index:
-            t = tag.group()
+        start_tag_iter = re.finditer(fr'{content_pattern}', self.html)
+        content_start_index = None
+        article_start_index = None
+        for tag in start_tag_iter:
             try:
                 if article := tag.group('article'):
                     article = article.lower()
@@ -52,17 +52,21 @@ class HtmlPage:
                 if tag.group('start'):
                     return tag.start()
                 elif article == 'article':
-                    return tag.start()
+                    if not article_start_index:
+                        article_start_index = tag.start()
                 elif content == 'content':
-                    if not current_tag_start_index:
-                        current_tag_start_index = tag.start()
+                    if not content_start_index:
+                        content_start_index = tag.start()
             except IndexError:
                 return tag.start()
-        if not current_tag_start_index:
+
+        if article_start_index:
+            return article_start_index
+        elif content_start_index:
+            return content_start_index
+        else:
             sys.exit('Не получилось найти контент на данной странице, '
                      'возможно неверно задан параметр CUTTER_TAG')
-
-        return current_tag_start_index
 
 
 def start_parse(url: str) -> str:

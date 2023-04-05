@@ -7,14 +7,19 @@ import settings
 
 URL_RULES: dict | None
 FORMATTING_RULES: dict | None
+STANDARD_CUTTER_REGEX = (
+    r'(<(div)[^<]*(class|id)="[^"]*((?P<article>[Aa]rticle)|'
+    r'(?P<content>[Cc]ontent))[^>]*>)|(<(?P<start>article)[^>]*>)'
+)
+
 
 STANDARD_RULES = dict(
-    CUTTER_TAG=r'(<(div)[^<]*(class|id)="[^"]*((?P<article>[Aa]rticle)|(?P<content>[Cc]ontent))[^>]*>)|(<(?P<start>article)[^>]*>)',
+    CUTTER_TAG=STANDARD_CUTTER_REGEX,
     TEXT_TAGS=frozenset({'p', 'h', 'b', 'li', 'i', 'a'}),
     CURRENT_DIRECTORY=PurePath(__file__).parent,
     MAX_LINE_LENGTH=80,
-    URL_RULES={},
-    FORMATTING_RULES={
+    URL_RULES=MappingProxyType({}),
+    FORMATTING_RULES=MappingProxyType({
         'p': {
             'template': '\n{}\n',
         },
@@ -22,7 +27,7 @@ STANDARD_RULES = dict(
             'template': '\n{}\n',
         },
         'b': {
-            'template': ' {} ',
+            'template': '{}',
         },
         'li': {
             'template': '\n{}',
@@ -30,8 +35,7 @@ STANDARD_RULES = dict(
         'a': {
             'template': '{}',
         },
-
-    }
+    })
 )
 
 
@@ -61,8 +65,8 @@ def get_parameter(standard_settings, other_settings, param_name: str) -> tuple:
             param_value_correct_type = type(standard_settings.get(param_name))
             if not isinstance(param_value, param_value_correct_type):
                 param_value = param_value_correct_type(param_value)
-        except TypeError as ex:
-            sys.exit(f'Неверно задан параметр {param_name} - {ex}')
+        except (TypeError, ValueError) as ex:
+            sys.exit(f'Неверно задан параметр {param_name}\n{ex}')
     return param_name, param_value
 
 
@@ -73,8 +77,6 @@ def create_settings(standard_settings, other_settings) -> dict:
 
 
 SETTINGS = create_settings(STANDARD_RULES, USER_SETTINGS)
-
-# FORMATTING_RULES: MappingProxyType = MappingProxyType(SETTINGS['FORMATTING_RULES'])
 
 
 @dataclass(frozen=True, slots=True)

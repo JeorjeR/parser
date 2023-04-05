@@ -4,26 +4,8 @@ from threading import Event, Thread
 
 from html_initialization import start_parse
 
-# url = sys.argv[1]
+url = sys.argv[1]
 
-
-# url = 'https://lenta.ru/news/2023/04/03/nhl_russia/'
-# url = 'https://habr.com/ru/post/721788/'
-# url = 'https://www.gazeta.ru/politics/news/2023/03/30/20098033.shtml'
-# url = 'https://www.gazeta.ru/comments/column/kolesnikov/14779778.shtml'
-# url = 'https://www.rbc.ru/business/31/03/2023/6425abb79a79477297e32c03?from=from_main_2'
-# url = 'https://lenta.ru/news/2023/04/03/nhl_russia/'
-url = 'https://www.gazeta.ru/lifestyle/photo/rio-de-janeiro-carnival-parade-2022.shtml'
-
-
-
-
-# TODO !!!! обработать ошибку если не нашли начало блока article иначе вылетает nontype hasnt stert()
-
-
-# TODO в целом все сделано, но необходимо решить следующе вопросы
-#   1. Как определять с какого тэга начинать читать контент, то есть в файле настроек дать возможность ввести название
-#       тега и его класс допустим, потом парсер как то должен найти этот тег
 
 def spin(msg: str, done: Event) -> None:
     for char in itertools.cycle('.'*idx for idx in range(15)):
@@ -35,19 +17,19 @@ def spin(msg: str, done: Event) -> None:
         print(f'\r{blanks}\r', end='')
 
 
-def supervisor():
+def supervisor(url_):
     done = Event()
     spinner = Thread(target=spin, args=('Processing', done))
     spinner.start()
     try:
-        file_name = start_parse(url)
+        file_name = start_parse(url_)
     finally:
         done.set()
     return file_name
 
 
-def main():
-    file_name = supervisor()
+def main(url_):
+    file_name = supervisor(url_)
     print('\rФайл со статьей успешно создан по пути', f'{file_name}', sep=' ')
 
 
@@ -56,7 +38,9 @@ ERROR_MESSAGE = '\rПрограмма преждевременно заверш�
 
 if __name__ == '__main__':
     try:
-        main()
+        if not url:
+            sys.exit('Ссылка не была передана в программу')
+        main(url)
     except KeyboardInterrupt:
         print(ERROR_MESSAGE, file=sys.stderr)
     except AssertionError as ex:
