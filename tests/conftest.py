@@ -1,6 +1,5 @@
 import dataclasses
 import enum
-from typing import Literal
 
 import pytest
 
@@ -25,6 +24,7 @@ def description(request):
     if mark:
         request.node.function.__doc__ = f'{mark}\n{__doc__ or ""}'
 
+
 def snake_to_pascal(snake_str):
     # Разделяем строку по символу подчеркивания
     components = snake_str.split('_')
@@ -46,7 +46,7 @@ def test_function(record_xml_attribute, request):
     else:
         test_description = description_integration_tests(request)
 
-    record_xml_attribute("classname", res)
+    record_xml_attribute("classname", f'test.{res}')
 
     if test_description:
         if test_description.name:
@@ -63,8 +63,10 @@ def description_api_tests(request) -> TestDescription:
         name=name,
     )
 
+
 def description_integration_tests(request) -> TestDescription | None:
     ...
+
 
 def description_unit_test(request) -> TestDescription | None:
     ...
