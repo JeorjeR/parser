@@ -7,4 +7,4 @@ def test_write_json_connection():
     Подготовка объектов
     """
     __doc__ = 'Подготовка объектов'
-    assert True, 'Запись поля json_connection'
+    assert False, 'Запись поля json_connection'

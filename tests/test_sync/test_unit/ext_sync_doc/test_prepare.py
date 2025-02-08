@@ -7,4 +7,4 @@ def test_read_json_connection():
     Подготовка объектов
     """
     __doc__ = 'Подготовка объектов'
-    assert True, 'Подготовка объектов'
+    assert False, 'Подготовка объектов'
