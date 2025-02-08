@@ -41,7 +41,7 @@ def test_function(record_xml_attribute, request):
         if test_description.class_name:
             record_xml_attribute("classname", test_description.class_name)
         if test_description.name:
-            record_xml_attribute("name", test_description.class_name)
+            record_xml_attribute("name", test_description.name)
 
 
 def get_description(request) -> TestDescription:
@@ -67,7 +67,7 @@ def description_api_tests(request) -> TestDescription:
     test_functional_name = snake_to_pascal(request.path.parts[tests_root_path_idx + 1].split('_')[1])
 
     return TestDescription(
-        class_name=f'{object_name}',
+        class_name=f'{test_functional_name}.{object_name}',
         name=name,
     )
 
