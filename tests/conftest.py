@@ -11,8 +11,8 @@ class TestTypes(enum.StrEnum):
 
 @dataclasses.dataclass
 class TestDescription:
-    class_name: str
-    name: str
+    class_name: str | None = None
+    name: str | None = None
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -35,10 +35,18 @@ def snake_to_pascal(snake_str):
 @pytest.fixture(scope='function', autouse=True)
 def test_function(record_xml_attribute, request):
 
+    test_description = get_description(request)
+
+    if test_description:
+        if test_description.class_name:
+            record_xml_attribute("classname", test_description.class_name)
+        if test_description.name:
+            record_xml_attribute("name", test_description.class_name)
+
+
+def get_description(request) -> TestDescription:
     tests_root_path_idx = request.path.parts.index('tests')
     test_type = request.path.parts[tests_root_path_idx + 2]
-    test_functional_name = snake_to_pascal(request.path.parts[tests_root_path_idx + 1].split('_')[1])
-    test_type = TestTypes(test_type)
 
     if test_type == TestTypes.API:
         test_description = description_api_tests(request)
@@ -47,27 +55,31 @@ def test_function(record_xml_attribute, request):
     else:
         test_description = description_integration_tests(request)
 
-    record_xml_attribute("classname", f'{test_type}.{test_functional_name}')
-
-    if test_description:
-        if test_description.name:
-            record_xml_attribute("name", test_description.class_name)
-
+    return test_description
 
 def description_api_tests(request) -> TestDescription:
     parent = request.path.parts[-2: -1][0]
-    parent_str = snake_to_pascal(parent)
+    object_name = snake_to_pascal(parent)
     name = request.node.function.__doc__.splitlines()[0].strip()
 
+
+
+    test_functional_name = snake_to_pascal(request.path.parts[tests_root_path_idx + 1].split('_')[1])
+    test_type = TestTypes(test_type)
+
     return TestDescription(
-        class_name=parent_str,
+        class_name=f'{test_functional_name}.{object_name}',
         name=name,
     )
 
 
 def description_integration_tests(request) -> TestDescription | None:
-    ...
+    return TestDescription(
+        class_name=TestTypes.INTEGRATION,
+    )
 
 
 def description_unit_test(request) -> TestDescription | None:
-    ...
+    return TestDescription(
+        class_name=TestTypes.UNIT,
+    )
