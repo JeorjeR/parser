@@ -25,5 +25,3 @@ def test_function(record_xml_attribute, request):
 
     record_xml_attribute("classname", parent_str)
     record_xml_attribute("name", name)
-    print("hello world")
-    assert True
