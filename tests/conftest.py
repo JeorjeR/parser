@@ -46,9 +46,9 @@ def test_function(record_xml_attribute, request):
     else:
         test_description = description_integration_tests(request)
 
+    record_xml_attribute("classname", res)
+
     if test_description:
-        if test_description.class_name:
-            record_xml_attribute("classname", res)
         if test_description.name:
             record_xml_attribute("name", test_description.class_name)
 
