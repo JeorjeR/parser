@@ -73,12 +73,16 @@ def description_api_tests(request) -> TestDescription:
 
 
 def description_integration_tests(request) -> TestDescription | None:
+    parent = request.path.parts[-2: -1][0]
+    object_name = parent
     return TestDescription(
-        class_name=TestTypes.INTEGRATION,
+        class_name=f'{TestTypes.INTEGRATION}.{object_name}',
     )
 
 
 def description_unit_test(request) -> TestDescription | None:
+    parent = request.path.parts[-2: -1][0]
+    object_name = parent
     return TestDescription(
-        class_name=TestTypes.UNIT,
+        class_name=f'{TestTypes.UNIT}.{object_name}',
     )
