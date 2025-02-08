@@ -25,5 +25,5 @@ def test_function(record_xml_attribute, request):
     func = request.path.stem
     func_str = snake_to_pascal(func)
 
-    record_xml_attribute("classname", parent_str)
-    record_xml_attribute("name", name)
+    #record_xml_attribute("classname", parent_str)
+    #record_xml_attribute("name", name)
