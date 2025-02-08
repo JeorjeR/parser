@@ -1,10 +1,7 @@
 import pytest
 
 
-@pytest.mark.metadata(
-    author="John Doe",
-    description="This test checks if the login feature works correctly",
-    environment="Staging",
-)
+@pytest.mark.description('Чтение поля json_connection')
 def test_read_json_connection():
+    __doc__ = 'Подготовка объектов'
     assert False, 'Чтение поля json_connection'

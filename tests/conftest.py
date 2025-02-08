@@ -11,10 +11,12 @@ def snake_to_pascal(snake_str):
 def test_function(record_xml_attribute, request):
     parent = request.path.parts[-2: -1][0]
     parent_str = snake_to_pascal(parent)
+    name = request.node.function.__doc__.strip()
 
     func = request.path.stem
     func_str = snake_to_pascal(func)
 
     record_xml_attribute("classname", parent_str)
+    record_xml_attribute("name", name)
     print("hello world")
     assert True
