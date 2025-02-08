@@ -35,9 +35,10 @@ def snake_to_pascal(snake_str):
 @pytest.fixture(scope='function', autouse=True)
 def test_function(record_xml_attribute, request):
 
-    tests_root_path_idx = request.path.parts.index('tests') + 2
-    test_type_dir_path = request.path.parts[tests_root_path_idx].split('_')[1]
-    res = TestTypes(test_type_dir_path)
+    tests_root_path_idx = request.path.parts.index('tests')
+    test_type = request.path.parts[tests_root_path_idx + 2].split('_')[1]
+    test_functional_name = snake_to_pascal(request.path.parts[tests_root_path_idx + 1].split('_')[1])
+    res = TestTypes(test_type)
 
     if res == TestTypes.API:
         test_description = description_api_tests(request)
@@ -46,7 +47,7 @@ def test_function(record_xml_attribute, request):
     else:
         test_description = description_integration_tests(request)
 
-    record_xml_attribute("classname", f'test.{res}')
+    record_xml_attribute("classname", f'{test_functional_name}.{res}')
 
     if test_description:
         if test_description.name:
