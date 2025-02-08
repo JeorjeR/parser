@@ -1,7 +1,7 @@
-from conftest import description
+import pytest
 
 
-@description('Подготовка объектов')
+@pytest.mark.description('Подготовка объектов')
 def test_read_json_connection():
     """
     Подготовка объектов

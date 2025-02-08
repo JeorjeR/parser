@@ -1,7 +1,7 @@
-from conftest import description
+import pytest
 
 
-@description('Создание ExtSyncDoc')
+@pytest.mark.description('Создание ExtSyncDoc')
 def test_read_json_connection():
     """
     Подготовка объектов

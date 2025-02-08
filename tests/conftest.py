@@ -1,11 +1,13 @@
 import pytest
 
-def description(func_description: str):
-
-    def inner(func):
-        func.__doc__ = f'{func_description}\n{__doc__ or ""}'
-        return func
-    return inner
+@pytest.fixture(scope='function', autouse=True)
+def description(request):
+    try:
+        mark = request.node.get_closest_marker("description").args[0]
+    except:
+        return
+    if mark:
+        request.node.function.__doc__ = f'{mark}\n{__doc__ or ""}'
 
 def snake_to_pascal(snake_str):
     # Разделяем строку по символу подчеркивания

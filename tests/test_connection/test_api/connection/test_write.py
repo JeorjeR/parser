@@ -1,7 +1,7 @@
-from conftest import description
+import pytest
 
 
-@description('Запись json_connection')
+@pytest.mark.description('Запись json_connection')
 def test_write_json_connection():
     """
     Подготовка объектов
