@@ -5,9 +5,9 @@ import pytest
 
 
 class TestTypes(enum.StrEnum):
-    API = 'api'
-    INTEGRATION = 'integration'
-    UNIT = 'unit'
+    API = 'test_api'
+    INTEGRATION = 'test_integration'
+    UNIT = 'test_unit'
 
 @dataclasses.dataclass
 class TestDescription:
@@ -36,7 +36,7 @@ def snake_to_pascal(snake_str):
 def test_function(record_xml_attribute, request):
 
     tests_root_path_idx = request.path.parts.index('tests')
-    test_type = request.path.parts[tests_root_path_idx + 2].split('_')[1]
+    test_type = request.path.parts[tests_root_path_idx + 2]
     test_functional_name = snake_to_pascal(request.path.parts[tests_root_path_idx + 1].split('_')[1])
     test_type = TestTypes(test_type)
 
