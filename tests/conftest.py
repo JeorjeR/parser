@@ -48,9 +48,9 @@ def test_function(record_xml_attribute, request):
 
     if test_description:
         if test_description.class_name:
-            record_xml_attribute("classname", test_description.class_name)
+            record_xml_attribute("classname", res)
         if test_description.name:
-            record_xml_attribute("name", test_description.name)
+            record_xml_attribute("name", test_description.class_name)
 
 
 def description_api_tests(request) -> TestDescription:
