@@ -67,7 +67,7 @@ def description_api_tests(request) -> TestDescription:
     test_functional_name = request.path.parts[tests_root_path_idx + 1].split('_')[1]
 
     return TestDescription(
-        class_name=f'api.{object_name}',
+        class_name=f'api.qwe',
         name=name,
     )
 
