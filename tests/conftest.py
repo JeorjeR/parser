@@ -63,9 +63,8 @@ def description_api_tests(request) -> TestDescription:
     name = request.node.function.__doc__.splitlines()[0].strip()
 
 
-
+    tests_root_path_idx = request.path.parts.index('tests')
     test_functional_name = snake_to_pascal(request.path.parts[tests_root_path_idx + 1].split('_')[1])
-    test_type = TestTypes(test_type)
 
     return TestDescription(
         class_name=f'{test_functional_name}.{object_name}',
