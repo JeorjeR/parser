@@ -1,3 +1,7 @@
+from conftest import description
+
+
+@description('Подготовка объектов')
 def test_read_json_connection():
     """
     Подготовка объектов
